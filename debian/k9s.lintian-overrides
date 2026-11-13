@@ -1,0 +1,12 @@
+# Lintian overrides for the k9s package.
+#
+# k9s is a Go binary built with CGO disabled (see debian/rules), so it is
+# statically linked on purpose. It is not intended for upload to the Debian
+# archive (hence no ITP bug), and it never accesses the local dpkg database
+# -- the uses-dpkg-database-directly hit is a false positive from embedded
+# grype/syft scanner code, which mentions dpkg paths while scanning container
+# images for installed packages.
+
+k9s: statically-linked-binary
+k9s: initial-upload-closes-no-bugs
+k9s: uses-dpkg-database-directly

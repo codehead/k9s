@@ -1,0 +1,33 @@
+Source: k9s
+Section: utils
+Priority: optional
+Maintainer: Arturo <arturo@example.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ golang-go (>= 2:1.24~),
+ help2man
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://k9scli.io/
+Vcs-Browser: https://github.com/derailed/k9s
+Vcs-Git: https://github.com/derailed/k9s.git
+
+Package: k9s
+Architecture: amd64 arm64
+Depends: ${misc:Depends}
+Description: terminal UI to manage Kubernetes clusters
+ K9s is a terminal UI to interact with your Kubernetes clusters. The aim of
+ this project is to make it easier to navigate, observe and manage your
+ applications in the wild.
+ .
+ K9s continually monitors Kubernetes for changes and offers shortcuts to
+ interact with the resources it observes. It bundles a rich set of keyboard
+ shortcuts to move around the cluster, inspect resource state, view and
+ tail container logs, and run common administrative tasks without typing
+ long kubectl commands.
+
+# Note on the Go toolchain: k9s' go.mod requires Go >= 1.26.8, newer than
+# trixie's golang-go. The build environment (see deb/Dockerfile) installs the
+# pinned upstream Go; a distro golang-go with GOTOOLCHAIN=auto also works, as
+# it fetches the required version itself. Dependencies are vendored
+# (go mod vendor) so the package builds without network access.

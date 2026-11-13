@@ -1,0 +1,24 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: k9s
+Upstream-Contact: Imhotep Software LLC <fernand@imhotep.io>
+Source: https://github.com/derailed/k9s
+
+Files: *
+Copyright: 2019-2026 Imhotep Software LLC and contributors
+License: Apache-2.0
+
+Files: debian/*
+Copyright: 2026 Arturo <arturo@example.com>
+License: Apache-2.0
+
+Files: vendor/*
+Copyright: the respective authors of each vendored Go module
+License: VENDOR-LICENSES
+ The Go module dependencies vendored under vendor/ are distributed under
+ their own upstream licenses. Each vendored module carries its license
+ text alongside its sources (vendor/<module>/{LICENSE,COPYING,...}).
+ Refer to those files for the applicable license and copyright holders.
+
+License: Apache-2.0
+ On Debian systems, the complete text of the Apache License, Version 2.0
+ can be found in "/usr/share/common-licenses/Apache-2.0".

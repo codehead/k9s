@@ -1,0 +1,2 @@
+Artifact output directory for the containerized Debian build (deb/).
+Contents (.deb/.buildinfo/.changes) are not tracked.

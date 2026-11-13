@@ -1,0 +1,47 @@
+#!/usr/bin/make -f
+# debian/rules for k9s -- see Debian Policy 4.9 and dh(1).
+
+PACKAGE := github.com/derailed/k9s
+GO ?= go
+VERSION := $(shell dpkg-parsechangelog -S Version)
+UPSTREAM := $(firstword $(subst -, ,$(VERSION)))
+
+# Reproducible builds: dpkg-buildpackage exports SOURCE_DATE_EPOCH derived
+# from debian/changelog.
+# https://reproducible-builds.org/docs/source-date-epoch/
+SOURCE_DATE_EPOCH ?= $(shell dpkg-parsechangelog -STimestamp)
+BUILD_DATE := $(shell date -u -d '@$(SOURCE_DATE_EPOCH)' '+%Y-%m-%dT%H:%M:%SZ')
+GIT_REV := $(shell git rev-parse --short HEAD 2>/dev/null || echo debian)
+
+GO_BUILD_FLAGS := -mod=vendor -trimpath -tags=netgo -buildvcs=false
+GO_LDFLAGS := -s -w \
+	-X $(PACKAGE)/cmd.version=v$(UPSTREAM) \
+	-X $(PACKAGE)/cmd.commit=$(GIT_REV) \
+	-X $(PACKAGE)/cmd.date=$(BUILD_DATE)
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	rm -f k9s
+	rm -rf debian/k9s
+
+override_dh_auto_build:
+	CGO_ENABLED=0 $(GO) build $(GO_BUILD_FLAGS) -ldflags "$(GO_LDFLAGS)" -o k9s main.go
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	$(GO) test $(GO_BUILD_FLAGS) ./...
+endif
+
+override_dh_auto_install:
+	install -D -m 0755 k9s debian/k9s/usr/bin/k9s
+	install -d debian/k9s/usr/share/bash-completion/completions
+	install -d debian/k9s/usr/share/zsh/vendor-completions
+	install -d debian/k9s/usr/share/fish/vendor_completions.d
+	install -d debian/k9s/usr/share/man/man1
+	./k9s completion bash > debian/k9s/usr/share/bash-completion/completions/k9s
+	./k9s completion zsh > debian/k9s/usr/share/zsh/vendor-completions/_k9s
+	./k9s completion fish > debian/k9s/usr/share/fish/vendor_completions.d/k9s.fish
+	help2man --no-info --name "terminal UI to manage Kubernetes clusters" \
+		--version-string "$(UPSTREAM)" ./k9s > debian/k9s/usr/share/man/man1/k9s.1

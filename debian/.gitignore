@@ -1,0 +1,6 @@
+.debhelper/
+*.debhelper
+*.debhelper.log
+debhelper-build-stamp
+files
+k9s/

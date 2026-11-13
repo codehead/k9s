@@ -1,0 +1,12 @@
+# BuildKit uses this file instead of the repo-root .dockerignore when the
+# build context is the repository root and the Dockerfile is deb/Dockerfile.
+# Only heavy, build-irrelevant trees are excluded; testdata/ is kept because
+# the package test suite needs it.
+.git
+.github
+assets
+change_logs
+cov.out
+deb/dist
+execs
+snap

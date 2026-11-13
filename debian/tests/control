@@ -1,0 +1,3 @@
+Test-Command: k9s version
+Depends: @
+Restrictions: allow-stderr

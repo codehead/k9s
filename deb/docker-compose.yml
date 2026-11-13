@@ -1,0 +1,29 @@
+# Build the k9s Debian package without installing anything on the host:
+#
+#   docker compose -f deb/docker-compose.yml run --rm deb
+#
+# The .deb/.buildinfo/.changes artifacts land in deb/dist/.
+name: k9s-deb
+
+services:
+  deb:
+    build:
+      context: ..
+      dockerfile: deb/Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: k9s-deb-build:trixie
+    init: true
+    volumes:
+      # Read-only view of the repository; the package build runs on a copy
+      # inside /work so the host tree stays pristine.
+      - ..:/src:ro
+      # Where the built artifacts are copied out.
+      - ./dist:/out
+      # Persistent Go module/build cache.
+      - go-cache:/go
+    command: ["build-deb.sh"]
+
+volumes:
+  go-cache:

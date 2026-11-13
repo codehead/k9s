@@ -6,7 +6,7 @@ cov.out
 execs
 /k9s
 /k8s
-dist
+/dist
 notes
 vendor
 go.mod1
@@ -26,3 +26,6 @@ kind
 /stresser
 __debug_bin*
 fg.yaml
+# Debian build artifacts (see deb/README.md); keep the directory itself tracked
+/deb/dist/*
+!/deb/dist/.gitkeep
